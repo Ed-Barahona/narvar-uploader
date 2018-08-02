@@ -5,25 +5,59 @@ const fse    = require('fs-extra');
 const BSON   = require('bson');
 const unzip  = require('unzip');
 const mkdirp = require('mkdirp');
+const logger = console; // change to logger
 const UPLOAD_DIR = 'temp/uploads/';
 
+// Retry Queue
 
-const readFile = () => {
+const postFile = (data) => {
+  // JSON validate
+  // POST data
+};
+
+const readFile = (data) => {
   const bson      = new BSON();
   const FILE_PATH = 'temp/example.bson';
   let content;
-  // First I want to read the file
-  fs.readFile(FILE_PATH, function read(err, B_DATA) {
+
+  return new Promise((resolve, reject) => {
+    fs.readFile(FILE_PATH, function read(err, B_DATA) {
       if (err) {
-          throw err;
+        logger.error('File read error: ', err);
+        reject(err);
+      } else {
+        content =  bson.deserialize(B_DATA);
+        resolve(content);
       }
-      content =  bson.deserialize(B_DATA);
-      processFile();
+    });
   });
   
-  function processFile() {
-      console.log('Uploaded: ', JSON.stringify(content));  
-    }
+};
+
+const procFiles = (data) => {
+  return new Promise((resolve, reject) => {
+    for(let key in data.module){
+      // process if module true
+      if(data.module[key]){
+        apps[data.app_name][key]().then((result) => {
+          data.file_data   = result;
+          data.module_name = key;
+          readFile(data).then((file) => {
+            logger.log(`${key} file read`);
+            postFile(file);
+          }).catch(err => {
+            logger.error(err);
+          });
+        })
+        .catch(err => {
+          logger.error(err);
+        });
+      } 
+    } // end loop
+    logger.log('Modules completed');
+    resolve(true);
+
+  });
 };
 
 const unzipFiles = (ZIP) => {
@@ -31,7 +65,7 @@ const unzipFiles = (ZIP) => {
       NAME = NAME.split('/')[2];
    
   const TEMP = `${UPLOAD_DIR}${NAME}/`;
-  console.log('UPLOAD FILE', TEMP);
+  logger.log('UPLOAD FILE', TEMP);
 
   fse.createReadStream(ZIP)
     .pipe(unzip.Extract({
@@ -46,10 +80,10 @@ const createDir = (req) => {
   return new Promise((resolve, reject) => {
     mkdirp(`${UPLOAD_DIR}${NAME}/`, function (err) {
       if (err) {
-        console.error(err);
+        logger.error(err);
         reject(err);
       } else {
-        console.log('pow!');
+        logger.log('Temp upload dir created');
         resolve();
       }
     });
@@ -62,10 +96,8 @@ const moveFile = (req, res) => {
   return new Promise((resolve, reject) => {
     sampleFile.mv(UPLOAD_DIR, function(err) {
       if (err) {
+        logger.error('Error moving file: ', err);
         reject(err);
-        //return res.status(500).send(err);
-      // decompress
-      // res.send('File uploaded!');
        } else  {
         resolve(true);
        }
@@ -75,16 +107,13 @@ const moveFile = (req, res) => {
 
 /* jshint ignore:start */
 const requestHandler = async (req, res) => {
-  // Assigned to var for readability
+  // Assigned for readability
   const move  = await moveFile(req); 
   const temp  = await createDir(req); 
   const unzip = await unzipFiles(data);
   const read  = await readFiles(data);
   const post  = await postData(data);
-  // Download
-  console.log('Downloading: ', post)
-  // res.download(ZIP_FILE);
-  // removeFiles(data, ZIP_FILE);
+
 };
 
 const proc = (req, res) => {
@@ -92,19 +121,18 @@ const proc = (req, res) => {
     return res.status(400).send('No files were uploaded.');
   
   requestHandler(req, res).then((result) => {
-    // console.error('Success: ', result);
+    res.status(200).send('Files successfully uploaded');
   }).catch(err => {
-    console.log('Error', err);
+    logger.error('Error', err);
     res.status(500).send('Unale to process your request');
   });
- 
 };
 
 
 setTimeout(function(){
   // readFile();
-  //console.log('read called');
-}, 8000);
+  // logger.log('upload called');
+}, 5000);
 
 const API = {
   proc

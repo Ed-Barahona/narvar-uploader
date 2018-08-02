@@ -23,3 +23,7 @@ package-lock.json
 
 # visual studio code 
 .history
+
+# app temp files
+/temp/downloads/
+/temp/uploads/

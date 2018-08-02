@@ -1,13 +1,14 @@
 /* jshint node: true, devel: true */
 'use strict';
 const fs = require('fs');
+const logger = console;
 
 const settings = () => {
-  console.log('Hello World');  
+  logger.log('Hello World');  
 };
 
 const reason_codes = (data) => {
-  console.log('reason codes called');
+  logger.log('reason codes called');
   const returnData = require('../test-data/return-reasons.json');
   return new Promise((resolve) => {
     resolve(returnData);
@@ -15,7 +16,7 @@ const reason_codes = (data) => {
 };
 
 const return_rules = (data) => {
-  console.log('reason codes called');
+  logger.log('reason codes called');
   const returnData = require('../test-data/return-reasons.json');
   return new Promise((resolve) => {
     resolve(returnData);
@@ -37,7 +38,7 @@ const packing_slip = (data) => {
 };
 
 const processor = () => {
-  console.log('Hello World');  
+  logger.log('Hello World');  
 };
 
 const API = {
