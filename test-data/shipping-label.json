@@ -1,0 +1,62 @@
+{
+    "status": "SUCCESS",
+    "status_code": 200,
+    "response": {
+        "id": 14175,
+        "shipping_label_html": "<table> <tbody> <tr> <td> <div style=\"height: 40; padding-top: 20;\"> <img src=\"http://assets.narvar.qa/retailers/sallybeauty/sally_beauty_white.jpg\" alt=\"logo\" width=\"120\"/> </div></td><td width=\"125\" align=\"center\"> <div style=\"width: 120; height: 28; background-color: #F0F0F0; padding-top: 5;\" text-align=\"center\"> <p style=\"font-size: 10;\"><b>SHIPPING LABEL</b></p><p style=\"font-size: 8; color: #888;\">Affix this <span style=\"text-decoration: underline;\">OUTSIDE</span> the box</p></div></td></tr></tbody> </table> <table width=\"96%\"> <tbody> <tr style=\"height: 220;\"> <td style=\"background-color: #F0F0F0; padding: 10;\"> <p><b>Instructions:</b></p><p/> <p>1. Print your shipping label and packing slip. Cut along the guideline.</p><p>2. Pack your return securely, in the original package if possible, and include the packing slip.</p><p>3. Affix your shipping label to the package, making sure no other tracking labels are showing.</p><p>4. Bring your package to the nearest <<CARRIER_NAME>> location.</p><p>5. Once shipped, you can track your returns package using the link provided in your email.</p><<ADDITIONAL_LABEL_IMAGE>></td></tr><tr style=\"height: 10;\"> <td></td></tr><tr style=\"height: 400; vertical-align: after;\" class=\"border_dashed_top\"> <td> <img src=\"data:image/png;base64,<<SHIPPING_LABEL_IMAGE>>\" alt=\"Shipping Label\" width=\"500\" class=\"bordered\"/> </td></tr></tbody> </table> <w:p> <w:r> <w:br w:type=\"page\"/></w:r> </w:p>",
+        "packing_slip_html": "<table> <tbody> <tr> <td> <div style=\"height: 20; padding-top: 20;\"> <img src=\"http://assets.narvar.qa/retailers/sallybeauty/sally_beauty_white.jpg\" alt=\"logo\" width=\"120\"/> </div></td><td width=\"120\" align=\"center\"> <div style=\"width: 120; height: 28; background-color: #F0F0F0; padding-top: 5;\" text-align=\"center\"> <p style=\"font-size: 10;\"><b>PACKING SLIP</b></p><p style=\"font-size: 8; color: #888;\">Put this <span style=\"text-decoration: underline;\">IN</span> the box</p></div></td></tr></tbody> </table> <table> <tbody> <tr style=\"height: 70; vertical-align: center;\"> <td style=\"padding-left: 5;\"> <p> <<SENDER_NAME>></p><p> <<SENDER_ADDRESS_LINE>></p><p> <<SENDER_CITY_STATE_ZIP>></p></td><td> </td><td> <img src=\"data:image/png;base64,<<BARCODE_IMAGE>>\" alt=\"barcode\" width=\"150\"/> </td></tr><tr style=\"height: 30; vertical-align: center;\"> <td style=\"padding-left: 5;\"> <p><b>Payment/CC type:</b> <<REFUND_TYPE>></p></td><td></td><td style=\"padding-left: 5;\"> <p><b>Order Date:</b> <<ORDER_DATE>></p></td><td></td><td style=\"padding-left: 5;\"> <p><b>Order #:</b> <<ORDER_NUMBER>></p></td></tr></tbody> </table> <table id=\"items\" class=\"items\" width=\"100%\" style=\"height: 720; font-family: Arial;\"> <thead> <tr style=\"height: 30; background-color: #F0F0F0; vertical-align: center;\"> <th width=\"30\">{RETURN_QUANTITY}</th> <th width=\"150\">{PRODUCT_SKU}</th> <th width=\"150\">{ITEM_NAME}</th> <th width=\"150\">{RETURN_REASON}</th> <th width=\"75\">{UNIT_PRICE}</th> </tr></thead> <tbody> <<ITEMS>> </tbody> </table>",
+        "template_config": {
+            "product_type": "regular_returns",
+            "return_method": "mail",
+            "carrier": "ups",
+            "carrier_service": "03",
+            "api_carrier_service": null,
+            "third_party_carrier": null,
+            "locale": "en_US",
+            "label_orientation": "0",
+            "order_barcode_configs": [{
+                "barcode_format": "BAR_39",
+                "variable_key": "ORDER_NUMBER"
+            }],
+            "item_barcode_configs": [],
+            "label_params": [{
+                "code": "TN",
+                "value": "ORDER_NUMBER",
+                "format": "text"
+            }],
+            "shipping_label_param": {},
+            "created_date": "2018-03-27T22:49:47Z",
+            "created_by": "Unknown",
+            "modified_date": "2018-05-08T23:57:21Z",
+            "modified_by": "Ajay Patel"
+        },
+        "template_data": {
+            "order_level_data": {
+                "SENDER_NAME": "Test Name",
+                "RMA_NUMBER": "123456789",
+                "CARRIER_NAME": "",
+                "ORDER_DATE": "",
+                "PHONE": "",
+                "SHIP_TO_EMAIL": "",
+                "EMAIL": "",
+                "ADDITIONAL_LABEL_IMAGE": "",
+                "INTERNAL_NUMBER": "123456787",
+                "SENDER_ADDRESS_LINE": "123 Folsom St.",
+                "SENDER_CITY_STATE_ZIP": "San Francisco, CA 94105",
+                "SHIP_TO_PHONE": "",
+                "REFUND_TYPE": "",
+                "ORDER_NUMBER": "123456788",
+                "SHIP_TO_SENDER_NAME": "Test Name 2",
+                "SHIP_TO_SENDER_ADDRESS_LINE": "633 Folsom St.",
+                "SHIP_TO_SENDER_CITY_STATE_ZIP": "San Francisco, CA 94107",
+                "SHIP_TO_COUNTRY_CODE": "US",
+                "COUNTRY_CODE": "US"
+            },
+            "item_level_data": [
+                ["", "", "", "", ""]
+            ]
+        }
+    },
+    "errors": null,
+    "preview_url": null
+}

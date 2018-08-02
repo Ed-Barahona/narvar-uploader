@@ -1,0 +1,33 @@
+UI Builder (v1 requirements)
+    - Not all is default
+    -
+    - accross or by module
+Packing Slip
+Return reason
+Return Rules
+
+ARCHITECTUAL FLOW
+
+
+add/create application configuration file
+- app name
+- versioning
+- schema validation via versioning
+- ACL (permissions/hub)
+- GDPR (none)
+
+
+
+UI
+- Form
+- Form building
+- Schema validation (input)
+
+
+
+Tasks Lists (in order)
+- UI Builder
+- Reasons
+- Packing Slip
+- Shipping label
+- Return Rules

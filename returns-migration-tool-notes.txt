@@ -1,0 +1,57 @@
+Returns Package Uploader
+- Connect to DB for faster dev time
+- Schema validation (versioning)
+- multi application support
+- Manifest
+- app config json
+    - drives tables and columns and corresponding JSON file name
+    - app config has versioning for schema validation
+    - 
+    
+    
+    
+Work Plan
+- Connect to DB's
+- Add API endpoints to download and upload
+    - Upload path property
+- Validation (retail auth)
+- UI for upload
+- UI for download
+
+
+7/5/2018 Notes:
+Allow for options to be passed, each configuration rule should be an option
+- Locale property names: locale.supported_locales
+- Return reasons: Needs to be an upsert not an override, logical delete
+
+Existing Returns Hub API's:
+- r2_retailers (returns enabled retailers, add to table if does not exist)
+- Returns configuration settings
+- carriers
+- Return reasons
+- Packing slip
+
+Not available API's:
+- returns settings
+- locale files (translation workbench)
+- UI assets
+- anything in retailer_info
+- OMS
+- Rules
+
+
+Portal Auth:
+- 
+
+7/11/2018 Meeting Notes
+
+
+UI Builder Questions:
+- Is there schema validation against the JSON configuration files
+- API's available via Portal Auth
+- What is the sequence of work?
+    - API's first?
+    - Validation (Other than input validation):
+        - JSON syntax validation
+        - Schema version validation
+    - UI

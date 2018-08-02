@@ -1,0 +1,14 @@
+{
+    "app_name": "returns",
+    "version": "1",
+    "description": "configuration for returns app",
+    "db_table": "retailer_info",
+    "config_files": [
+        {
+            "file_name": "returns_settings_json",
+            "file_type": "json",
+            "table_col_name": "returns_settings_json"
+        }
+    ],
+    "assets": {}
+}

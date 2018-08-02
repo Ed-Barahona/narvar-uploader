@@ -1,0 +1,162 @@
+RETURNS DATA PORTABILITY TOOL
+
+
+Key Stakeholders
+
+
+Backend Author: Ed
+Backend Signoff: Ed/Uday
+Frontend Author: Ed
+Frontend Signoff: Charan/Saurab
+QA signoff: ?
+Devops signoff: Uday
+Security signoff: Uday
+Product signoff: Saurab
+Other stakeholders: ?
+
+
+Notes from review meeting: <link to the page here with notes taken down during meeting.>
+
+Background
+Internal tool that allows the downloading and uploading of application configuration settings and assets, the tool will be used to migrate tenants between environments, used by internal facing teams with proper permissions, the functionality can be accessed via an API allowing for a CLI, Web UI and a REST endpoint.
+
+- Reduces CSM workload 
+- Reduces engineering resources to migrate tenants
+- Speeds up client onboarding
+- Removes sideeffects caused by manual migrations
+
+
+Design Goals
+The application should allow for any authenticated user to download and upload configuration files in the current environment.  THe package should have verification to avoid issues caused by manual package file manipulation.  The tool is internal facing and used for administrative purposes and will be integrated into Narvar Hub, scaling follows the same scaling concerns followed by Narvar Hub.  All data packages live in memory during the life of the download process and there after downloaded to client machines, so there is no need for an external data store at the moment.
+
+Other Proposals
+
+Option 1
+Creating multiple view applications in production environments to publish configuration and asset files to.  This solution creates multiple applications to publish to from the Narvar Hub application but requires more engineering effort.
+Option 2
+Versioning of configuration files in database.  THis application is ideal as it would allow to set configurations in preview mode however this approach requires more engineering effort in the backend of Narvar Apps to load the draft configuration file into the UI application.
+
+
+Solution Summary
+Summary of the solution in a paragraph or two.
+The application uses the API's available by Narvar Hub/Portal Auth to get and put configuration data. The application uses a manifest JSON file which has a version number used to validate configuration files against a JSON schema that resides in the application.  Credential authentication is done via the existing Narvar Apps / Portal Auth mechanism.  The application only downloads and uploads from the environment it is running on.
+Due to the number of variations in S3 asset files, S3 assets will be downloaded as an entire folder and all S3 URL's in configuration files will be replaced with the environment it is being uploaded to.
+
+
+
+Solution Details
+Details of the solution...feel free to add/remove sections that make sense, some starter ones are below.
+- NodeJS application (integration into existing Hub application)
+- Application Configuration files drive application settings such as configuration file names and S3 information. 
+- Narvar Application Agnostic (Returns, Tracking)
+- API endpoints to download and upload
+- Package Manifest file drives API versioning and Application information
+- Package naming to include retailer name to avoid unnecessary parsing
+    - This allows to check user credentials on upload before parsing manifest file
+- JSON Schema versioned validation and syntax validator
+- File IO package downloader/uploader
+- Existing Narvar Portal Auth ACL's
+- S3 Migration: High level complete asset folder download and upload with URL replacement in configuration files.
+- URL overiding happens in upload (ingestion) to avoid environment issues
+- Generate backup package of existing configuration before upload
+- Simple UI to envoke download and upload
+- UI verification on upload with upload summary (Are you sure you want to uplaod)
+
+
+
+
+System diagram
+Diagram of all the binaries, databases and 3rd party services that this system touches
+
+
+Wire frames
+Any wireframes for the UI if this has a frontend component?
+
+
+Code
+The inital application code will be in it's own repository while in development, once core functionality has been developed the code will be integrated into the Narvar Hub Node JS backend.
+
+Testing
+What kind of testing is going to be done.  Unit tests, regression tests, etc.
+
+QA Test Plans ( Functional, Automation and Performance)
+Due to the internal facing nature of the application only functional testing is recommended.
+
+Scaling
+Internal facing tool which will be integrated into Narvar Hub, scaling is handled via existing Narvar Hub application.
+
+Operation details | Runbook
+Details that the operations team might want to know like location of binaries, monitoring to be setup, oncall, etc
+
+Metrics
+Event tracking for available API endpoints and application events will be implemented.
+- API Endpoint called
+- User information (who called the API)
+- Tenant data information 
+- Event type (upload/download)
+- Error/Successs
+
+
+Timeline & Resources
+Two weeks total development, taking into consideration that Narvar Hub API's are available.
+- One week of development
+- One week of dev testing
+
+Internationalization
+NA
+
+Tech Debt
+Narvar Hub API's exist, the expectation is that API endpoints to retrive configuration data exists.
+
+Open Questions
+- Do we allow users to manually edit files in the packages?
+
+
+Tradeoffs made
+This design documenation takes into consideration that API's will be available and that users are not to edit internal files of packages.
+- No checksum validation on package
+- NOT a standalone service 
+    - Direct connetion to DB
+    - Does not expose API's to Get/Post the configuration files
+    - External dependency on API resources
+
+- Centralized abstracted persisted data store: 
+    - Audit log
+    - Checksum validation
+    - Multi environment upload/download
+    - Direct to DB connection for download/upload of configuration files
+
+IMPORTANT: Alternate Cloud Strategy
+NA
+
+
+Return Rules:
+- Notifiy on change
+    - Email
+    - Ticket
+
+- New clients only, old platform is not supported.
+
+- Simple diff of what will be overriden/changes that will be made
+- Drop existing data then override
+
+- Make file binary so it cannot be edited
+
+
+- Use a diff 
+
+
+
+ENDPOINTS:
+API endpoints are driven by app versioning, manifest files
+
+
+api/<ENDPOINT NAME>/download/
+api/<ENDPOINT NAME>/upload/
+
+version:
+app_name: string,
+retailer_name: string,
+modules {
+    moduleName: boolean
+}

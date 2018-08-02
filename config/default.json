@@ -1,0 +1,16 @@
+{
+    "environment": "development",
+    "port": 3030,
+    "pg_config": {
+        "database": "tracking",
+        "user": "narvar",
+        "password": "narvar",
+        "host": "localhost",
+        "port": 5432,
+        "ssl": false,
+        "max": 20,
+        "min": 4,
+        "idleTimeoutMillis": 5000,
+        "connectionTimeoutMillis": 5000
+    }
+}
