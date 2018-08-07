@@ -4,7 +4,11 @@ const fs = require('fs');
 const logger = console;
 
 const settings = () => {
-  logger.log('Hello World');  
+  logger.log('settings codes called');
+  const returnData = require('../test-data/settings.json');
+  return new Promise((resolve) => {
+    resolve(returnData);
+  });
 };
 
 const reason_codes = (data) => {

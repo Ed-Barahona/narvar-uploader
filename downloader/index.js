@@ -7,17 +7,21 @@ const logger = console;
 const DOWNLOAD_DIR = 'temp/downloads/';
 
 const apps = {
-  'returns': require('./returns'),
+  'returns': require('./returns')
 };
 
-const validateJSON = (json) => {
-    try {
-        JSON.parse(json);
-        return true;
-    } catch (e) {
-        return false;
-    }
+const clearDir = (req, res) => {
+  fse.emptyDir(DOWNLOAD_DIR)
+  .then(() => {
+    console.log('success!: download directory cleared');
+    res.status(200).send({message: 'successfully cleared download directory'});
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).send({error: 'Unable to clear download directory'});
+  });
 };
+
 
 const removeFiles = (data, ZIP_FILE) => {
   
@@ -67,7 +71,7 @@ const writeFile = (data) => {
       resolve(true);
     })
     .catch(err => {
-      logger.error('Downloader write file error: ', err);
+      logger.error('Download write file error: ', err);
       reject(err);
     });
   });
@@ -120,8 +124,11 @@ const requestHandler = async (data, res) => {
   res.download(ZIP_FILE, function(err){
     if(err){
       // Handle Error
+      console.log('req handler error: ', data, ZIP_FILE);
       removeFiles(data, ZIP_FILE);
+      reject(err);
     } else {
+      console.log('req handler success: ', ZIP_FILE);
       removeFiles(data, ZIP_FILE);
     }
   });
@@ -132,36 +139,16 @@ const proc = (req, res) => {
   const data = req.body;
   logger.log(req.body);
   requestHandler(req.body, res).then((result) => {
-    // console.error('Success: ', result);
+    console.error('Success: ', result);
   }).catch(err => {
     logger.log('Error', err);
     res.status(500).send('Unale to process your request');
   });
 };
 
-const testObj = {
-  app_name: 'returns',
-  retailer_name: 'nike',
-  env: 'qa',
-  module: {
-    settings: false,
-    reason_codes: true,
-    return_rules: false,
-    shipping_label: false,
-    packing_slip: false
-  }
-};
-
-setTimeout(function(){
-  requestHandler(testObj).then((result) => {
-    logger.error('TEST SUCCESS: ', result);
-  }).catch(err => {
-    logger.error('TEST ERROR: ', err);
-  });
-}, 3000);
-
 const API = {
     proc,
+    clearDir
 };
 
 module.exports = API;
