@@ -11,7 +11,10 @@ const apps      = require('./narvar-apps');
 router.get('/api/v1/health_check', lib.healthCheck);
 router.post('/api/v1/download', download.proc);
 router.post('/api/v1/upload', upload.proc);
+router.post('/api/v1/post', upload.post);
+
 router.purge('/api/v1/upload', upload.clearDir);
 router.purge('/api/v1/download', download.clearDir);
+
 
 module.exports = router;

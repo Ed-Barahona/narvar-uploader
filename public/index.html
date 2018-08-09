@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+    </head>
+    <body>
+    <div class="container">
+      <form id="download-form">
+        <button type="submit" class="btn btn-primary">Download Test</button>
+      </form>
+      <form ref="uploadForm"
+            action="http://localhost:3030/api/v1/upload"
+            method="post"
+            id="uploadForm" 
+            encType="multipart/form-data">
+        <input type="file" name="zipFile" id="fileInput" />
+        <input type='submit' value='Upload!' />
+    </form>     
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    var downloadTest = {
+          "app_name": "returns",
+          "retailer_name": "nike",
+          "user": "martha",
+          "env": "qa",
+          "module": {
+            "settings": true,
+            "reason_codes": false,
+            "packing_slip": false
+          }
+    };
+
+    // downloadTest = JSON.stringify(downloadTest);
+    var success = function(data){
+      var blob=new Blob([data]);
+      var link=document.createElement('a');
+      link.href=window.URL.createObjectURL(blob);
+      link.download="<FILENAME_TO_SAVE_WITH_EXTENSION>";
+      link.click();
+    };
+
+    $("#download-form").submit(function(e){
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: '/api/v1/download',
+        data: downloadTest,
+        dataType: 'json',
+        success: function (res) {
+          console.log('RESSSSS', res);
+                // var a = document.createElement('a');
+                // var url = window.URL.createObjectURL(data);
+                // a.href = url;
+                // a.download = 'myfile.pdf';
+                // a.click();
+                // window.URL.revokeObjectURL(url);
+            },
+      }).done(function(response) {
+        console.log( "success: ", response );
+      })
+      .fail(function(error) {
+        console.log( "fail error: ", error.responseText);
+      })
+      .always(function(response) {
+        console.log( "complete: ", response );
+      });
+    });
+
+
+    // $("#upload-form").submit(function(e){
+    //   e.preventDefault();
+    // $.ajax( {
+    //     url: $(this).attr('action'),
+    //     type: 'POST',
+    //     data: new FormData( this ),
+    //     processData: false,
+    //     contentType: false
+    // }).done(function( data ) {
+    //     //do stuff with the data you got back.
+    // });
+
+    // });
+
+    $('#GetFile').on('click', function () {
+        $.ajax({
+            url: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/172905/test.pdf',
+            method: 'GET',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (data) {
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(data);
+                a.href = url;
+                a.download = 'myfile.pdf';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
+        });
+    });
+
+
+
+   var formData = new FormData($(this));
+
+    $( '#uploadForms' )
+      .submit( function( e ) {
+        e.preventDefault();
+        $.ajax( {
+          url: '/api/v1/upload',
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          method: 'POST',
+          type: 'POST', // For jQuery < 1.9
+          success: function(data){
+              alert(data);
+              $("#fileInput").val('');
+          },
+          error: function(err){
+            console.log('error :', err.responseText);
+          }
+        });
+    });
+
+</script>  
+</body>
+</html>

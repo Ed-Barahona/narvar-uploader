@@ -154,9 +154,11 @@ API endpoints are driven by app versioning, manifest files
 api/<ENDPOINT NAME>/download/
 api/<ENDPOINT NAME>/upload/
 
-version:
+version: int (auto assigned)
 app_name: string,
 retailer_name: string,
 modules {
     moduleName: boolean
 }
+
+

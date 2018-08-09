@@ -4,6 +4,7 @@
 const config      = require('config');
 const express     = require('express');
 const app         = express();
+const path        = require('path');
 const bodyParser  = require('body-parser');
 const fileUpload = require('express-fileupload');
 const routes      = require('./routes');
@@ -20,6 +21,8 @@ app.use(express.static('apidoc'));
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
 app.use(fileUpload());
+app.use(express.static('public'));
+app.use(express.static('temp'));
 app.all('*', routes);
 
 const server = app.listen(app.get('port'), () => {
