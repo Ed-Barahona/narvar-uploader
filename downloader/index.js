@@ -89,11 +89,14 @@ const getData = (data) => {
 
   const total = Object.keys(data.module).length;
   let   count = 0;
+  
 
   return new Promise((resolve, reject) => {
     for(let key in data.module){
       // process if module=true
-      if(data.module[key]){
+      logger.log(`${key}: `, data.module[key]);
+      if(data.module[key] === 'true'|| data.module[key] === true){
+        logger.log('TRUE', key);
         apps[data.app_name][key]()
         .then((result) => {
           data.file_data   = result; // Response data
@@ -117,6 +120,7 @@ const getData = (data) => {
         });
       } else {
         count ++;
+        logger.log('FALSE', key);
         checkCount();
       }
     } // end loop
