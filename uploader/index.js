@@ -102,7 +102,7 @@ const parseFile = (BSON_FILE) => {
         content = JSON.stringify(content);  
         // Sync call
         try {
-          fse.writeFile(`${JSON_FILE}.json`, content)
+          fse.writeFile(`${JSON_FILE}.json`, content);
           logger.log(`${JSON_FILE}.json created`);
           resolve(content);
         } catch (err) {
@@ -138,7 +138,7 @@ const postData = (appName, key , jData) => {
 };
 
 const postFiles = (data) => {
-  
+  logger.log('POST DATA REQ DATA: ', data);
   let FILE = data.file_name;
   let NAME = FILE.split('.')[0];
    
@@ -190,11 +190,7 @@ const unzipFiles = (req) => {
   logger.log('Unzip file: ', ZIP);
   logger.log('Unzip into: ', TEMP);
 
-  // Creates a folder based on file name
-  // fse.createReadStream(ZIP)
-  //   .pipe(unzip.Extract({
-  //     path: TEMP
-  // }));
+ 
   return new Promise((resolve, reject)=>{
     let promiseList = [];
     let stream  = fse.createReadStream(ZIP)
@@ -202,7 +198,8 @@ const unzipFiles = (req) => {
     stream.on('entry', function (entry) {
           // entry.path, entry.type, entry.size;
               new Promise((resolve, reject) => {
-                console.log("each file parse")
+                logger.log("each file parse");
+
                   entry.pipe(fse.createWriteStream(`${TEMP}${entry.path}`));
 
                   parseFile(`${TEMP}${entry.path}`).then((result) => {
@@ -272,6 +269,10 @@ const requestHandler = async (req, res) => {
   const temp  = await createDir(req);
   const unzip = await unzipFiles(req);
   const man   = await loadManifest(req);
+
+  console.log('MANNN RESPONSE: ', man)
+
+  res.status(200).send({message: 'successfully uploaded files', data: man})
   // const read  = await postFiles(man);
   //const post  = await postData(data);
 };
@@ -283,7 +284,7 @@ const proc = (req, res) => {
     return res.status(400).send('No package uploaded.');
   } else { 
     requestHandler(req, res).then((result) => {
-      res.status(200).send('Files successfully uploaded');
+      // res.status(200).send('Files successfully uploaded');
     }).catch(err => {
       logger.error('Error', err);
       res.status(500).send('Unale to process your request');
@@ -293,12 +294,13 @@ const proc = (req, res) => {
 
 // POST processed files
 const post = (req, res) => {
-  // logger.log('UPLOAD REQ: ', req.body);
-  if (!req.upload_directory){
+  logger.log('POST REQ: ', req.body);
+  if (!req.body.folder_name){
     return res.status(400).send('No directory to post.');
-  } else { 
-    postFiles(req, res).then((result) => {
-      res.status(200).send('Files successfully posted');
+  } else {
+    console.log("req data: ", req.body);
+    postFiles(req.body, res).then((result) => {
+      // res.status(200).send('Files successfully posted');
     }).catch(err => {
       logger.error('Error', err);
       res.status(500).send('Unale to process your request');
